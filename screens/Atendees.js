@@ -5,9 +5,11 @@ import {
     ScrollView,
     StyleSheet,
     Image,
-    
+    TextInput,
+
     } from 'react-native'
 import CoolestButton from '../components/CoolestButton'
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 class Atendees extends React.Component{
 
@@ -20,7 +22,9 @@ class Atendees extends React.Component{
         this.state = {attedees: [{name: 'Juan', cost: '80'}, {name: 'Pablo', cost:'100'}]}
     }
     
-    
+    addAttendee(name,cost){
+        this.setState({attedees:[...this.state.attedees,{name,cost}], name: '', cost:''})
+    }
 
     render() {
         return(
@@ -35,7 +39,7 @@ class Atendees extends React.Component{
                     {
                         this.state.attedees.map(
                             (attendee, index) => (
-                                <View key={index}>
+                                <View style={stylesss.attendeesList} key={index} >
                                     <Image
                                     source={require('../assets/images/robot-dev.png')}
                                     style={{width:50,height:50,marginRight:10}}
@@ -49,15 +53,60 @@ class Atendees extends React.Component{
                         )
                     }
                 </ScrollView>
-
-                <View style= {[stylesss.form]}>
-                </View>
+                <AttendantForm
+                    name={ this.state.name }
+                    cost={ this.state.cost }
+                    onNameChange={ (name) => this.setState({name}) }
+                    onCostChange={ cost => this.setState({cost}) }
+                    addAttendee={ () =>  this.addAttendee(this.state.name, this.state.cost) }
+                />
+                
             </View>
         );
     }
 }
 
+const AttendantForm = ( {name, onNameChange, cost, onCostChange, addAttendee} ) => (
+    <View style={stylesss.form}>
+        <View style={stylesss.inputWrapper}>
+            <TextInput
+                placeholder="Name of the attendee"
+                value={name}
+                style={stylesss.inputText}
+                onChangeText={onNameChange} />
+
+            <TextInput
+                placeholder="Cost per hour"
+                value={cost}
+                keyboardType = 'number-pad'
+                style={stylesss.inputText}
+                onChangeText={ onCostChange } />
+        </View>
+        <TouchableOpacity onPress={ addAttendee }>
+            <View style={stylesss.buttonContainer}>
+                <Text style={stylesss.addButton}>+</Text>
+            </View>
+        </TouchableOpacity>
+    </View>
+);
+
 const stylesss = StyleSheet.create({
+    inputText:{
+        height:45,
+        padding:10,
+        backgroundColor:'#ededed',
+        borderColor: '#ddd',
+        borderWidth:1,
+        borderRadius: 10,
+        fontSize:20,
+        marginBottom:5,
+    },
+    attendeesList:{
+        flex: 1,
+        padding: 20,
+        flexDirection: 'row',
+        alignItems:'center'
+    },
     container: {
         flex: 1,
     },
@@ -75,8 +124,32 @@ const stylesss = StyleSheet.create({
     form:{
         flex: 1,
         maxHeight:120,
+        borderTopWidth:1,
+        borderTopColor:'#999',
+        flexDirection:'row',
+        padding:10,
        // backgroundColor: 'orange'
     },
+    inputWrapper:{
+      flex:1,
+      backgroundColor:'orange',  
+    },
+    buttonContainer:{
+        backgroundColor:'#ededed',
+        borderColor: '#ddd',
+        width:100,
+        height:100,
+        borderRadius:20,
+        borderWidth:1,
+        marginLeft:10,
+        borderColor:'red',
+        justifyContent: 'center',
+        alignItems:'center',
+    },
+    addButton:{
+        fontSize:20,
+        lineHeight: 28
+    }
 });
 
 

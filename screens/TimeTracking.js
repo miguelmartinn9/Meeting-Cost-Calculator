@@ -1,6 +1,6 @@
 import React, {Component} from 'react'
 import {Text, View} from 'react-native'
-import { TouchableOpacity } from 'react-native-gesture-handler';
+import { CoolestButton } from '../components/CoolestButton';
 
 class TimeTracking extends Component  {
 
@@ -11,10 +11,11 @@ class TimeTracking extends Component  {
     render (){
         return (
             <View>
-                <Text>Time Tracking screen!</Text>
-                <TouchableOpacity onPress= {() =>this.props.navigation.navigate('MeetingSummary') } >
-                    <Text>End Meeting</Text>
-                </TouchableOpacity>
+                <Text>{Number(3.45).toFixed(2)}</Text>
+                <CoolestButton
+                    label={'End Meeting'}
+                    action={() => this.props.navigation.navigate('MeetingSummary')}
+                />
             </View>
         );
     }

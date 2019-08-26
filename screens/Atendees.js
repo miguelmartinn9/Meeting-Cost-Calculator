@@ -10,8 +10,21 @@ import {
     } from 'react-native'
 import CoolestButton from '../components/CoolestButton'
 import { TouchableOpacity } from 'react-native-gesture-handler';
+import {connect} from 'react-redux';
+import {createAddAttendee} from '../model/actions';
+
+
+const mapStateToProps = (state) => {
+    return ({attedees: state.attedees});
+}
+
+const mapDispatchToProps = {
+    dispatchAddAttendees: (name,cost) => createAddAttendee (name,cost)
+};
 
 class Atendees extends React.Component{
+
+    
 
     static navigationOptions= {
         title: 'Attendees Screen',
@@ -19,14 +32,18 @@ class Atendees extends React.Component{
 
     constructor (){
         super();
-        this.state = {attedees: [{name: 'Juan', cost: '80'}, {name: 'Pablo', cost:'100'}]}
+        this.state = {name:'', cost:''};
     }
     
     addAttendee(name,cost){
-        this.setState({attedees:[...this.state.attedees,{name,cost}], name: '', cost:''})
+        this.props.dispatchAddAttendees (name,cost);
+        this.setState({name:'', cost:''});
+        
     }
 
     render() {
+        const {attedees} = this.props;
+
         return(
             <View style={stylesss.container}>
                 <View style = {[stylesss.startButton]}>
@@ -37,7 +54,8 @@ class Atendees extends React.Component{
 
                 <ScrollView style = {stylesss.attendeesContainer}>
                     {
-                        this.state.attedees.map(
+
+                        attedees.map(
                             (attendee, index) => (
                                 <View style={stylesss.attendeesList} key={index} >
                                     <Image
@@ -72,7 +90,7 @@ const AttendantForm = ( {name, onNameChange, cost, onCostChange, addAttendee} ) 
             <TextInput
                 placeholder="Name of the attendee"
                 value={name}
-                style={stylesss.inputText}
+                style={stylesss .inputText}
                 onChangeText={onNameChange} />
 
             <TextInput
@@ -142,7 +160,6 @@ const stylesss = StyleSheet.create({
         borderRadius:20,
         borderWidth:1,
         marginLeft:10,
-        borderColor:'red',
         justifyContent: 'center',
         alignItems:'center',
     },
@@ -152,6 +169,4 @@ const stylesss = StyleSheet.create({
     }
 });
 
-
-
-export default Atendees;
+export default connect(mapStateToProps,mapDispatchToProps)(Atendees);

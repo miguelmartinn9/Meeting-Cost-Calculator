@@ -1,7 +1,7 @@
-import {combineReducers} from "redux";
-import addAttendeeReducer from '../reducers/addAttendees'
+import { combineReducers } from "redux";
+import addAttendeeReducer from './addAttendeeReducer';
 
-const rootReducer = ({
+const rootReducer = combineReducers({
     attendees: addAttendeeReducer,
 });
 

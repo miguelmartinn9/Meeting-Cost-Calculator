@@ -1,76 +1,65 @@
-import React from 'react'
+import React, {Component} from 'react';
 import {
     Text,
     View,
     ScrollView,
     StyleSheet,
     Image,
-    TextInput,
+    TouchableOpacity,
+    TextInput
+} from 'react-native';
+import CoolButton from '../components/CoolestButton';
+import { connect } from 'react-redux';
+import { createAddAttendeeAction } from "../model/actions/actions";
 
-    } from 'react-native'
-import CoolestButton from '../components/CoolestButton'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import {connect} from 'react-redux';
-import {createAddAttendee} from '../model/actions/actions';
+class Attendees extends Component {
 
 
-const mapStateToProps = (state) => {
-    return ({attedees: state.attedees});
-}
-
-const mapDispatchToProps = {
-    dispatchAddAttendees: (name,cost) => createAddAttendee (name,cost)
-};
-
-class Atendees extends React.Component{
-
-    
-
-    static navigationOptions= {
-        title: 'Attendees Screen',
+    static navigationOptions = {
+        title: 'Attendees',
     };
 
-    constructor (){
+    constructor() {
         super();
-        this.state = {name:'', cost:''};
+        this.state = {name: '', cost: ''};
     }
-    
-    addAttendee(name,cost){
-        this.props.dispatchAddAttendees (name,cost);
-        this.setState({name:'', cost:''});
-        
+
+    addAttendee(name, cost) {
+        this.props.dispatchAddAttendee(name, cost);
+        this.setState({name: '', cost: ''})
     }
 
     render() {
-        const {attedees} = this.props;
 
-        return(
-            <View style={stylesss.container}>
-                <View style = {[stylesss.startButton]}>
-                    <CoolestButton 
-                    label={"Start Meeting!"}
-                    action={() => this.props.navigation.navigate('MeetingSummary')}/>
+        const {attendees} =  this.props;
+
+        return (
+            <View style={styles.container}>
+                <View style={[styles.startButton]}>
+                    <CoolButton
+                        label={"Start meetig"}
+                        action={ ()  => this.props.navigation.navigate('TimeTracking') } />
                 </View>
 
-                <ScrollView style = {stylesss.attendeesContainer}>
+                <ScrollView style={styles.attendeesContainer}>
                     {
-
-                        attedees.map(
-                            (attendee, index) => (
-                                <View style={stylesss.attendeesList} key={index} >
+                        attendees.map(
+                            (attendee, index) =>(
+                                <View style={styles.attendee} key={index}>
                                     <Image
-                                    source={require('../assets/images/robot-dev.png')}
-                                    style={{width:50,height:50,marginRight:10}}
+                                        source={require('../assets/images/robot-dev.png')}
+                                        style={{width: 50, height: 50, marginRight: 10}}
                                     />
                                     <View>
-                                        <Text>{attendee.name}</Text>
-                                        <Text>{attendee.cost} €/hour</Text>
+                                        <Text style={styles.name}>{attendee.name}</Text>
+                                        <Text style={styles.cost}>{attendee.cost} €/hour</Text>
                                     </View>
                                 </View>
                             )
                         )
                     }
                 </ScrollView>
+
                 <AttendantForm
                     name={ this.state.name }
                     cost={ this.state.cost }
@@ -78,53 +67,36 @@ class Atendees extends React.Component{
                     onCostChange={ cost => this.setState({cost}) }
                     addAttendee={ () =>  this.addAttendee(this.state.name, this.state.cost) }
                 />
-                
             </View>
         );
     }
 }
 
 const AttendantForm = ( {name, onNameChange, cost, onCostChange, addAttendee} ) => (
-    <View style={stylesss.form}>
-        <View style={stylesss.inputWrapper}>
+    <View style={styles.form}>
+        <View style={styles.inputWrapper}>
             <TextInput
                 placeholder="Name of the attendee"
                 value={name}
-                style={stylesss .inputText}
+                style={styles.inputText}
                 onChangeText={onNameChange} />
 
             <TextInput
                 placeholder="Cost per hour"
                 value={cost}
                 keyboardType = 'number-pad'
-                style={stylesss.inputText}
+                style={styles.inputText}
                 onChangeText={ onCostChange } />
         </View>
         <TouchableOpacity onPress={ addAttendee }>
-            <View style={stylesss.buttonContainer}>
-                <Text style={stylesss.addButton}>+</Text>
+            <View style={styles.buttonContainer}>
+                <Text style={styles.addButton}>+</Text>
             </View>
         </TouchableOpacity>
     </View>
 );
 
-const stylesss = StyleSheet.create({
-    inputText:{
-        height:45,
-        padding:10,
-        backgroundColor:'#ededed',
-        borderColor: '#ddd',
-        borderWidth:1,
-        borderRadius: 10,
-        fontSize:20,
-        marginBottom:5,
-    },
-    attendeesList:{
-        flex: 1,
-        padding: 20,
-        flexDirection: 'row',
-        alignItems:'center'
-    },
+const styles = StyleSheet.create({
     container: {
         flex: 1,
     },
@@ -132,41 +104,69 @@ const stylesss = StyleSheet.create({
         flex: 1,
         maxHeight: 80,
         justifyContent: 'center',
-        alignItems:'center',
-       // backgroundColor: 'red',
+        alignItems: 'center',
     },
     attendeesContainer: {
         flex: 1,
-      //  backgroundColor: 'lightblue',
     },
-    form:{
+    attendee: {
+        padding: 20,
         flex: 1,
-        maxHeight:120,
-        borderTopWidth:1,
-        borderTopColor:'#999',
-        flexDirection:'row',
-        padding:10,
-       // backgroundColor: 'orange'
+        flexDirection: 'row',
+        alignItems: 'center',
     },
-    inputWrapper:{
-      flex:1,
-      backgroundColor:'orange',  
+    name: {
+        fontSize: 18,
     },
-    buttonContainer:{
-        backgroundColor:'#ededed',
+    cost: {
+        fontSize: 14,
+        color: '#999',
+    },
+    form: {
+        flex: 1,
+        maxHeight: 120,
+        borderTopWidth: 1,
+        borderTopColor: '#999',
+        flexDirection: 'row',
+        padding: 10,
+    },
+    inputWrapper: {
+        flex: 1,
+    },
+    inputText: {
+        height: 45,
+        padding: 10,
+        backgroundColor: '#ededed',
         borderColor: '#ddd',
-        width:100,
-        height:100,
-        borderRadius:20,
-        borderWidth:1,
-        marginLeft:10,
-        justifyContent: 'center',
-        alignItems:'center',
+        borderWidth: 1,
+        borderRadius: 10,
+        fontSize: 20,
+        marginBottom: 5,
     },
-    addButton:{
-        fontSize:20,
-        lineHeight: 28
-    }
+    buttonContainer: {
+        width: 100,
+        height: 100,
+        backgroundColor: '#ededed',
+        borderRadius: 20,
+        borderColor: '#ddd',
+        borderWidth: 1,
+        marginLeft: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    addButton: {
+        fontSize: 28,
+        lineHeight: 28,
+    },
 });
 
-export default connect(mapStateToProps,mapDispatchToProps)(Atendees);
+
+const mapStateToProps = (state) => {
+    return ({ attendees: state.attendees });
+};
+
+const mapDispatchToProps = {
+    dispatchAddAttendee: (name, cost) => createAddAttendeeAction(name, cost)
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Attendees);

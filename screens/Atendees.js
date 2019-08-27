@@ -11,7 +11,7 @@ import {
 import CoolestButton from '../components/CoolestButton'
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import {connect} from 'react-redux';
-import {createAddAttendee} from '../model/actions';
+import {createAddAttendee} from '../model/actions/actions';
 
 
 const mapStateToProps = (state) => {

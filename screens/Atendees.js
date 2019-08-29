@@ -8,7 +8,7 @@ import {
     TouchableOpacity,
     TextInput
 } from 'react-native';
-import CoolButton from '../components/CoolestButton';
+import CoolButton from '../components/CoolButton';
 import { connect } from 'react-redux';
 import { createAddAttendeeAction } from "../model/actions/actions";
 
